@@ -1,5 +1,7 @@
 package com.fashionista.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -33,9 +35,20 @@ public class ProductController {
 	    public ModelAndView Success(Product add, Model m)
 	    {
 	                          pdao.addpro(add);
-	                          ModelAndView model=new ModelAndView("view","Product", new Product());
+	                          ModelAndView model=new ModelAndView("viewproduct","Product", new Product());
 	                          return model;
 	    }
 	              
 
+
+
+@RequestMapping(value="viewproduct")
+public ModelAndView listOfTeams() {
+ //AddProduct addp=new AddProduct();
+    ModelAndView modelAndView = new ModelAndView("viewproduct");
+     	        List<Product> teams = pdao.getProducts();
+     	        //System.out.println("obj:"+teams);
+    modelAndView.addObject("lists", teams);
+    	        return modelAndView;
+}
 }
