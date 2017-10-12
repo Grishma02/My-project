@@ -20,8 +20,8 @@ public class ProductImpl implements ProductDAO {
 	
 
 	public void addpro(Product pro) {
-		System.out.println("Product DAO");
-		System.out.println(pro.getpname());
+		//System.out.println("Product DAO");
+		//System.out.println(pro.getpname());
 		//UserCredential uc=new UserCredential();
 		//uc.setUsername(r.getUsername());
 		//uc.setPassword(r.getPassword());
@@ -69,7 +69,81 @@ public class ProductImpl implements ProductDAO {
           transaction.rollback();
           e.printStackTrace();
 	       }
- 	     sessionFactory.close();
+ 	     session.close();
 		 return productList;
 	    }
+
+
+
+public void edit_list(Product adp){
+	   Session session =sessionFactory.openSession();
+	  // System.out.println("edit session"+session);
+ 	 Transaction transaction =  session.beginTransaction();
+ 	List<Product> editlist=null;
+    try {
+	    //int id=adp.getpid();
+    	   int pid=adp.getpid();
+	   // System.out.println("id******"+id);
+        editlist=  session.createQuery("from Product where pid=:pid").setParameter("pid",pid).list();
+	    System.out.println("editlist *********"+editlist);
+        		     		       
+        editlist.get(0).setpid(adp.getpid());
+        editlist.get(0).setpname(adp.getpname());
+        editlist.get(0).setpdesc(adp.getpdesc());
+        editlist.get(0).setpprice(adp.getpprice());
+        editlist.get(0).setavail(adp.getavail());
+        editlist.get(0).setbrand(adp.getbrand());
+
+        session.saveOrUpdate(editlist.get(0));
+        transaction.commit();
+       }
+    catch (Exception e) {
+        transaction.rollback();
+        e.printStackTrace();
+	       }  
+      session.close();
+ }
+
+public Product single_object(int pid)
+{
+   Session session =sessionFactory.openSession();
+  // System.out.println("single object session"+session);
+   Transaction transaction =  session.beginTransaction();
+   List<Product> b4=null;
+ 	try
+     {
+ 	//String query=.list();
+ 	//System.out.println(query);
+     b4 =  session.createQuery("from Product where pid= :pid").setParameter("pid",pid).list();
+    System.out.println("*****"+b4.get(0));
+     transaction.commit();
+     session.close();
+                 
+ }        
+ catch (Exception e) 
+ {
+    transaction.rollback();
+    e.printStackTrace();
+ }
+    return b4.get(0);
+}
+
+
+
+public void deleteRow(int pid) {  
+	   Session session =sessionFactory.openSession();
+	   Transaction transaction =  session.beginTransaction();
+    List<Product> del=null;
+    try{
+ 	 del=session.createQuery("from Product where pid=:pid").setParameter("pid", pid).list();
+       session.delete(del.get(0));
+       transaction.commit();
+       session.close();
+  
+    }
+catch(Exception e){
+   transaction.rollback();
+   e.printStackTrace();
+}
+}
 }
